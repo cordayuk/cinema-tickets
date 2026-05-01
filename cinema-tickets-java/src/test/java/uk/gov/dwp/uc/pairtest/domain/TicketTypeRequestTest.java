@@ -31,7 +31,7 @@ class TicketTypeRequestTest {
             IllegalArgumentException.class,
             () -> new TicketTypeRequest(Type.ADULT, noOfTickets));
 
-        assertEquals("noOfTickets must be greater than zero", exception.getMessage());
+        assertEquals("noOfTickets cannot be less than 1", exception.getMessage());
     }
 
     @ParameterizedTest
