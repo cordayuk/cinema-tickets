@@ -53,5 +53,24 @@ class TicketTypeRequestTest {
         assertEquals(type, ticketTypeRequest.type());
     }
 
+    @Test
+    @DisplayName("Adult tickets should cost 25")
+    void adultTypeTicketsShouldHaveCostOf25() {
 
+        assertEquals(25, Type.ADULT.getCost());
+    }
+
+    @Test
+    @DisplayName("Child tickets should cost 15")
+    void childTypeTicketsShouldHaveCostOf15() {
+
+        assertEquals(15, Type.CHILD.getCost());
+    }
+
+    @Test
+    @DisplayName("Infant tickets should cost zero")
+    void infantTypeTicketsShouldHaveCostOfZero() {
+
+        assertEquals(0, Type.INFANT.getCost());
+    }
 }

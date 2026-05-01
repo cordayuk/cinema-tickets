@@ -17,7 +17,19 @@ public record TicketTypeRequest(Type type, int noOfTickets) {
     }
 
     public enum Type {
-        ADULT, CHILD , INFANT
+        ADULT(25), CHILD(15) , INFANT(0);
+
+        int cost;
+
+        Type(int cost) {
+            this.cost = cost;
+        }
+
+        public int getCost() {
+            return cost;
+        }
     }
+
+
 
 }
