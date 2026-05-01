@@ -11,8 +11,8 @@ public record TicketTypeRequest(Type type, int noOfTickets) {
         if(type == null){
             throw new IllegalArgumentException("Type cannot be null");
         }
-        if(noOfTickets < 1){
-            throw new IllegalArgumentException("noOfTickets cannot be less than 1");
+        if(noOfTickets < 0){
+            throw new IllegalArgumentException("noOfTickets cannot be less than 0");
         }
     }
 
