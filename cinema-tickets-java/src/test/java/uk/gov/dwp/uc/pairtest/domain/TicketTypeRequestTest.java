@@ -24,19 +24,19 @@ class TicketTypeRequestTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0,-1, -2, -6, -14, -25, -33, -44 })
-    @DisplayName("Creation of TicketTypeRequest should throw IllegalArgumentException if noOfTickets must be greater than zero")
+    @ValueSource(ints = {-1, -2, -6, -14, -25, -33, -44 })
+    @DisplayName("Creation of TicketTypeRequest should throw IllegalArgumentException if noOfTickets must be greater or equal than zero")
     void shouldThrowIllegalArgumentExceptionsWhenNoOfTicketsIsBelowZero(int noOfTickets) {
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class,
             () -> new TicketTypeRequest(Type.ADULT, noOfTickets));
 
-        assertEquals("noOfTickets cannot be less than 1", exception.getMessage());
+        assertEquals("noOfTickets cannot be less than 0", exception.getMessage());
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 5, 6, 8, 14, 16, 25, 89})
-    @DisplayName("Creation of TicketTypeRequest should be successful if noOfTickets is greater than zero")
+    @ValueSource(ints = {0, 1, 5, 6, 8, 14, 16, 25, 89})
+    @DisplayName("Creation of TicketTypeRequest should be successful if noOfTickets is equal or greater than zero")
     void shouldCreateTicketTypeRequestIfNoOfTicketsIsGreaterThan1(int noOfTickets) {
 
         TicketTypeRequest ticketTypeRequest = new TicketTypeRequest(Type.ADULT, noOfTickets);
