@@ -48,15 +48,15 @@ public class TicketServiceImpl implements TicketService {
             throw new InvalidPurchaseException("You must request at least 1 ticket");
         }
 
-        if(ticketSum > MAX_TICKETS){
+        if(ticketSum > MAX_TICKETS) {
             throw new InvalidPurchaseException(String.format("You cannot request more than %d tickets", MAX_TICKETS));
         }
 
-        if(ticketCounts.get(ADULT) == 0){
+        if(!ticketCounts.containsKey(ADULT) || ticketCounts.get(ADULT) == 0){
             throw new InvalidPurchaseException("At least 1 ADULT ticket is required");
         }
 
-        if(ticketCounts.get(INFANT) > ticketCounts.get(ADULT)) {
+        if(ticketCounts.containsKey(INFANT) && ticketCounts.get(INFANT) > ticketCounts.get(ADULT)) {
             throw new InvalidPurchaseException("You cannot have more INFANTS than ADULTS");
         }
     }
