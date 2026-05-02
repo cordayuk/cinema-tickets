@@ -161,7 +161,7 @@ class TicketServiceImplTest {
 
                 InvalidPurchaseException exception = assertThrows(
                     InvalidPurchaseException.class,
-                    () -> ticketService.purchaseTickets(1L, ticketTypeRequests)
+                    () -> ticketService.purchaseTickets(VALID_ACCOUNT_ID, ticketTypeRequests)
                 );
 
                 assertEquals("At least 1 ADULT ticket is required", exception.getMessage());
@@ -255,7 +255,7 @@ class TicketServiceImplTest {
 
             TicketTypeRequest ticketTypeRequest = new TicketTypeRequest(Type.ADULT, 10);
 
-            ticketService.purchaseTickets(1L, ticketTypeRequest);
+            ticketService.purchaseTickets(VALID_ACCOUNT_ID, ticketTypeRequest);
 
             verify(ticketPaymentService, times(1)).makePayment(anyLong(), integerArgumentCaptor.capture());
 
@@ -270,7 +270,7 @@ class TicketServiceImplTest {
                 new TicketTypeRequest(Type.ADULT, 10)
             };
 
-            ticketService.purchaseTickets(1L, ticketTypeRequests);
+            ticketService.purchaseTickets(VALID_ACCOUNT_ID, ticketTypeRequests);
 
             verify(seatReservationService, times(1)).reserveSeat(anyLong(), integerArgumentCaptor.capture());
 
@@ -290,7 +290,7 @@ class TicketServiceImplTest {
                 new TicketTypeRequest(Type.INFANT, 5)
             };
 
-            ticketService.purchaseTickets(1L, ticketTypeRequests);
+            ticketService.purchaseTickets(VALID_ACCOUNT_ID, ticketTypeRequests);
 
             verify(seatReservationService, times(1)).reserveSeat(anyLong(), integerArgumentCaptor.capture());
 
@@ -308,7 +308,7 @@ class TicketServiceImplTest {
                 new TicketTypeRequest(Type.INFANT, 5)
             };
 
-            ticketService.purchaseTickets(1L, ticketTypeRequests);
+            ticketService.purchaseTickets(VALID_ACCOUNT_ID, ticketTypeRequests);
 
             verify(seatReservationService, times(1)).reserveSeat(anyLong(), integerArgumentCaptor.capture());
 
@@ -328,7 +328,7 @@ class TicketServiceImplTest {
                 new TicketTypeRequest(Type.INFANT, 1)
             };
 
-            ticketService.purchaseTickets(1L, ticketTypeRequests);
+            ticketService.purchaseTickets(VALID_ACCOUNT_ID, ticketTypeRequests);
 
             verify(ticketPaymentService, times(1)).makePayment(anyLong(), integerArgumentCaptor.capture());
 
@@ -368,7 +368,7 @@ class TicketServiceImplTest {
         @DisplayName("TicketPaymentService.makePayment should only be called once")
         void purchaseTicketsShouldCallTicketPaymentServiceOnlyOnce() {
 
-            ticketService.purchaseTickets(1L, new TicketTypeRequest(Type.ADULT, 2));
+            ticketService.purchaseTickets(VALID_ACCOUNT_ID, new TicketTypeRequest(Type.ADULT, 2));
 
             verify(ticketPaymentService, times(1)).makePayment(anyLong(), anyInt());
         }
@@ -377,7 +377,7 @@ class TicketServiceImplTest {
         @DisplayName("SeatReservationService.reserveSeat should only be called once")
         void purchaseTicketsShouldCallReserveSeatsOnlyOnce() {
 
-            ticketService.purchaseTickets(1L, new TicketTypeRequest(Type.ADULT, 2));
+            ticketService.purchaseTickets(VALID_ACCOUNT_ID, new TicketTypeRequest(Type.ADULT, 2));
 
             verify(seatReservationService, times(1)).reserveSeat(anyLong(), anyInt());
         }
@@ -386,7 +386,7 @@ class TicketServiceImplTest {
         @DisplayName("Takes payment before reserving seats")
         void shouldPayBeforeReservingSeats() {
 
-            ticketService.purchaseTickets(1L, new TicketTypeRequest(Type.ADULT, 2));
+            ticketService.purchaseTickets(VALID_ACCOUNT_ID, new TicketTypeRequest(Type.ADULT, 2));
 
             InOrder order = inOrder(ticketPaymentService, seatReservationService);
 
