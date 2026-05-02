@@ -116,7 +116,7 @@ public class TicketServiceImpl implements TicketService {
                 throw new InvalidPurchaseException("Ticket request must not be null");
             }
             Type ticketType = ticketTypeRequest.type();
-            ticketTally.put(ticketType,ticketTally.getOrDefault(ticketType, 0) + ticketTypeRequest.noOfTickets());
+            ticketTally.put(ticketType, ticketTally.getOrDefault(ticketType, 0) + ticketTypeRequest.noOfTickets());
         }
 
         return ticketTally;
