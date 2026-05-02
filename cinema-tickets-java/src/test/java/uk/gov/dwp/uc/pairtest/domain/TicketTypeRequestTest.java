@@ -1,7 +1,9 @@
 package uk.gov.dwp.uc.pairtest.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,5 +55,45 @@ class TicketTypeRequestTest {
         assertEquals(type, ticketTypeRequest.type());
     }
 
+    @Test
+    @DisplayName("Adult tickets should cost 25")
+    void adultTypeTicketsShouldHaveCostOf25() {
 
+        assertEquals(25, Type.ADULT.getCost());
+    }
+
+    @Test
+    @DisplayName("Child tickets should cost 15")
+    void childTypeTicketsShouldHaveCostOf15() {
+
+        assertEquals(15, Type.CHILD.getCost());
+    }
+
+    @Test
+    @DisplayName("Infant tickets should cost zero")
+    void infantTypeTicketsShouldHaveCostOfZero() {
+
+        assertEquals(0, Type.INFANT.getCost());
+    }
+
+    @Test
+    @DisplayName("Adult Tickets should require a seat")
+    void adultTicketsShouldRequireASeat() {
+
+        assertTrue(Type.ADULT.isSeatRequired());
+    }
+
+    @Test
+    @DisplayName("Child Tickets should require a seat")
+    void childTicketsShouldRequireASeat() {
+
+        assertTrue(Type.CHILD.isSeatRequired());
+    }
+
+    @Test
+    @DisplayName("Infant Tickets should not require a seat")
+    void childTicketsShouldNotRequireASeat() {
+
+        assertFalse(Type.INFANT.isSeatRequired());
+    }
 }
