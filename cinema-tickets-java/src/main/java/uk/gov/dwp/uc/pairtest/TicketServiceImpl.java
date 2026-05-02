@@ -35,11 +35,38 @@ public class TicketServiceImpl implements TicketService {
 
         validateBusinessRules(ticketCounts);
 
-        int amountToPay = ticketCounts.entrySet().stream().mapToInt(entry -> entry.getValue() * entry.getKey().getCost()).sum();
-        int totalSeats = ticketCounts.entrySet().stream().filter(e -> e.getKey().isSeatRequired()).mapToInt(Entry::getValue).sum();
+        int amountToPay = calculateTotalCost(ticketCounts);
+        int totalSeats = calculateTotalSeatsRequired(ticketCounts);
 
         ticketPaymentService.makePayment(accountId, amountToPay);
         seatReservationService.reserveSeat(accountId, totalSeats);
+    }
+
+    /**
+     * Calculates the total cost of all tickets across all ticket types.
+     *
+     * @param ticketCounts a Map of {@link Type} to the total quantity of tickets request for that type.
+     *
+     * @return the total cost of all ticket types in ticketCounts.
+     */
+    private int calculateTotalCost(Map<Type, Integer> ticketCounts) {
+        return ticketCounts.entrySet().stream()
+            .mapToInt(entry -> entry.getValue() * entry.getKey().getCost())
+            .sum();
+    }
+
+    /**
+     * Calculates the total number of seats required across all ticket types.
+     * Ticket {@link Type) that do not require seats are excluded from the count.
+     *
+     * @param ticketCounts a Map of {@link Type} to the total quantity of tickets request for that type.
+     * @return the total number of seats required.
+     */
+    private int calculateTotalSeatsRequired(Map<Type, Integer> ticketCounts) {
+        return ticketCounts.entrySet().stream()
+            .filter(entry -> entry.getKey().isSeatRequired())
+            .mapToInt(Entry::getValue)
+            .sum();
     }
 
     /**
@@ -49,7 +76,9 @@ public class TicketServiceImpl implements TicketService {
      * @param ticketCounts - the ticket count of each type of ticket.
      */
     private void validateBusinessRules(Map<Type, Integer> ticketCounts) {
-        int totalTicketsRequested = ticketCounts.values().stream().mapToInt(Integer::valueOf).sum();
+        int totalTicketsRequested = ticketCounts.values().stream()
+            .mapToInt(Integer::valueOf)
+            .sum();
 
         if(totalTicketsRequested == 0) {
             throw new InvalidPurchaseException("You must request at least 1 ticket");
