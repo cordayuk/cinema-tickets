@@ -62,25 +62,15 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private Map<Type, Integer> tallyTicketCounts(TicketTypeRequest[] ticketTypeRequests) {
-        int adultTickets = 0;
-        int childTickets = 0;
-        int infantTickets = 0;
+        Map<Type, Integer> ticketTally = new EnumMap<>(Type.class);
 
         for(TicketTypeRequest ticketTypeRequest : ticketTypeRequests) {
             if(ticketTypeRequest == null){
                 throw new InvalidPurchaseException("Ticket request must not be null");
             }
-            switch(ticketTypeRequest.type()){
-                case ADULT -> adultTickets += ticketTypeRequest.noOfTickets();
-                case CHILD -> childTickets += ticketTypeRequest.noOfTickets();
-                case INFANT -> infantTickets += ticketTypeRequest.noOfTickets();
-            }
+            Type ticketType = ticketTypeRequest.type();
+            ticketTally.put(ticketType,ticketTally.getOrDefault(ticketType, 0) + ticketTypeRequest.noOfTickets());
         }
-
-        Map<Type, Integer> ticketTally = new EnumMap<>(Type.class);
-        ticketTally.put(ADULT, adultTickets);
-        ticketTally.put(CHILD, childTickets);
-        ticketTally.put(INFANT, infantTickets);
 
         return ticketTally;
     }
