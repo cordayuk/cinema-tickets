@@ -126,6 +126,25 @@ class TicketServiceImplTest {
                 verifyNoInteractions(ticketPaymentService, seatReservationService);
             }
 
+            @Test
+            @DisplayName("Reject requests if there is a null ticket request")
+            void shouldThrowInvalidPurchaseExceptionIfThereIsANullTicketRequest() {
+
+                TicketTypeRequest[] ticketTypeRequests = {
+                    new TicketTypeRequest(Type.ADULT, 5),
+                    null,
+                    new TicketTypeRequest(Type.INFANT, 5)
+                };
+
+                InvalidPurchaseException exception = assertThrows(
+                    InvalidPurchaseException.class,
+                    () -> ticketService.purchaseTickets(VALID_ACCOUNT_ID, ticketTypeRequests)
+                );
+
+                assertEquals("Ticket request must not be null", exception.getMessage());
+                verifyNoInteractions(ticketPaymentService, seatReservationService);
+            }
+
         }
 
         @Nested
