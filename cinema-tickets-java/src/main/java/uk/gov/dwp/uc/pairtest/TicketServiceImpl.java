@@ -37,18 +37,25 @@ public class TicketServiceImpl implements TicketService {
 
         int amountToPay = ticketCounts.entrySet().stream().mapToInt(entry -> entry.getValue() * entry.getKey().getCost()).sum();
         int totalSeats = ticketCounts.entrySet().stream().filter(e -> e.getKey().isSeatRequired()).mapToInt(Entry::getValue).sum();
+
         ticketPaymentService.makePayment(accountId, amountToPay);
         seatReservationService.reserveSeat(accountId, totalSeats);
     }
 
+    /**
+     * Validates the ticket counts against the business rules.
+     * Throws {@link InvalidPurchaseException} if validation fails.
+     *
+     * @param ticketCounts - the ticket count of each type of ticket.
+     */
     private void validateBusinessRules(Map<Type, Integer> ticketCounts) {
-        int ticketSum = ticketCounts.values().stream().mapToInt(Integer::valueOf).sum();
+        int totalTicketsRequested = ticketCounts.values().stream().mapToInt(Integer::valueOf).sum();
 
-        if(ticketSum == 0) {
+        if(totalTicketsRequested == 0) {
             throw new InvalidPurchaseException("You must request at least 1 ticket");
         }
 
-        if(ticketSum > MAX_TICKETS) {
+        if(totalTicketsRequested > MAX_TICKETS) {
             throw new InvalidPurchaseException(String.format("You cannot request more than %d tickets", MAX_TICKETS));
         }
 
@@ -61,6 +68,17 @@ public class TicketServiceImpl implements TicketService {
         }
     }
 
+    /**
+     * Aggregates ticketTypeRequests by type, summing the total number of tickets requested of each type.
+     * If this method encounters a null ticketTypeRequest in ticketTypeRequests it will
+     * throw a {@link InvalidPurchaseException}
+     *
+     * @param ticketTypeRequests and array of {@link TicketTypeRequest} objects that specify the
+     *                           type of ticket and quantity of tickets requested.
+     *
+     * @return a Map where each key is a {@link Type} and the value is the total number of tickets
+     * requested for that type.
+     */
     private Map<Type, Integer> tallyTicketCounts(TicketTypeRequest[] ticketTypeRequests) {
         Map<Type, Integer> ticketTally = new EnumMap<>(Type.class);
 
@@ -75,6 +93,13 @@ public class TicketServiceImpl implements TicketService {
         return ticketTally;
     }
 
+    /**
+     * Validates the incoming request.
+     *
+     * @param accountId the requested accountID
+     * @param ticketTypeRequests the requested tickets by type.
+     * @throws InvalidPurchaseException if accountId is null or <1 or ticketTypeRequests is null or empty.
+     */
     private void validateRequest(Long accountId, TicketTypeRequest[] ticketTypeRequests) throws InvalidPurchaseException {
 
         if(accountId == null || accountId < 1L ){
@@ -85,5 +110,4 @@ public class TicketServiceImpl implements TicketService {
             throw new InvalidPurchaseException("You must request at least 1 ticket");
         }
     }
-
 }
