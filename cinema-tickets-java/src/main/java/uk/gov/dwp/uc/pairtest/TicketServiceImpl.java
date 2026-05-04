@@ -26,6 +26,22 @@ public class TicketServiceImpl implements TicketService {
         this.seatReservationService = seatReservationService;
     }
 
+    /**
+     * Purchases tickets for the given account, charges the payment service and reserves the number of
+     * required seats.
+     *
+     * The request is validated, ticket quantities are tallied by {@link Type} and the business rules
+     * are enforced. Once validated the total cost is calculated and paid via {@link TicketPaymentService}
+     * and then the seats are reserved via {@link SeatReservationService}.
+     *
+     * @param accountId the ID of the account requesting tickets. Must non-null and >= 1.
+     * @param ticketTypeRequests one or more {@link TicketTypeRequest} objects that represent the
+     *                           type and quantity of tickets requested. Must not be null or empty,
+     *                           and must not contain null elements.
+     * @throws InvalidPurchaseException if accountID is null or <1, if ticketTypeRequests
+     *                                  is null/empty or contains a null element or the request
+     *                                  does not meet the business rules.
+     */
     @Override
     public void purchaseTickets(Long accountId, TicketTypeRequest... ticketTypeRequests) throws InvalidPurchaseException {
 
