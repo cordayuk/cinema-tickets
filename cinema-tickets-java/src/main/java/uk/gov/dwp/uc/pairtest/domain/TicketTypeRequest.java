@@ -17,7 +17,9 @@ public record TicketTypeRequest(Type type, int noOfTickets) {
     }
 
     public enum Type {
-        ADULT(25, true), CHILD(15, true) , INFANT(0, false);
+        ADULT(25, true),
+        CHILD(15, true),
+        INFANT(0, false);
 
         int cost;
         boolean seatRequired;
